@@ -33,7 +33,7 @@ export default async function ExpenseGroupDetailPage({
         <ChevronLeft size={16} /> Volver a deudas
       </Link>
 
-      <header className="bg-crave-blue rounded-hero p-7 border border-crave-brown/15 shadow-soft">
+      <header className="bg-crave-blue rounded-hero p-5 md:p-7 border border-crave-brown/15 shadow-soft">
         <div className="flex items-center justify-between mb-4">
           <p className="text-xs uppercase tracking-widest font-semibold text-crave-brown/70">
             Gasto compartido
@@ -47,7 +47,7 @@ export default async function ExpenseGroupDetailPage({
           )}
         </div>
 
-        <h1 className="font-serif italic text-2xl md:text-3xl font-medium leading-tight mb-3">
+        <h1 className="font-serif italic text-xl md:text-3xl font-medium leading-tight mb-3 break-words">
           {group.description}
         </h1>
 

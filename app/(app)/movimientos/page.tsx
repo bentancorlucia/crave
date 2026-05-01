@@ -23,16 +23,19 @@ export default async function MovimientosPage({
 
   return (
     <main className="pb-12 space-y-6">
-      <div className="flex items-end justify-between gap-4 flex-wrap">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
         <div>
-          <h1 className="font-serif italic text-3xl md:text-4xl font-medium">Movimientos</h1>
+          <h1 className="font-serif italic text-2xl md:text-4xl font-medium">Movimientos</h1>
           <p className="text-sm text-crave-brown/70">
             {tab === "evolucion"
               ? "Cómo evoluciona la cuenta madre con el tiempo."
               : "Todo lo que entró y salió."}
           </p>
         </div>
-        <Link href="/movimientos/nuevo" className={buttonVariants()}>
+        <Link
+          href="/movimientos/nuevo"
+          className={buttonVariants() + " w-full md:w-auto justify-center"}
+        >
           <Plus size={16} /> Registrar
         </Link>
       </div>
@@ -57,7 +60,7 @@ async function ListaTab({ type, month }: { type?: "ingreso" | "egreso"; month?: 
   return (
     <>
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap min-w-0">
           <FilterPill href="/movimientos" active={!type}>
             Todos
           </FilterPill>
@@ -68,7 +71,7 @@ async function ListaTab({ type, month }: { type?: "ingreso" | "egreso"; month?: 
             Egresos
           </FilterPill>
         </div>
-        <p className="text-xs text-crave-brown/60">{movements.length} movimientos</p>
+        <p className="text-xs text-crave-brown/60 ml-auto">{movements.length} movimientos</p>
       </div>
 
       <RecentMovements movements={movements as any} />

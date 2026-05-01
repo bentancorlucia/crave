@@ -15,7 +15,7 @@ export default async function NuevaTransferenciaPage() {
       >
         <ChevronLeft size={16} /> Volver a deudas
       </Link>
-      <h1 className="font-serif italic text-3xl md:text-4xl font-medium mb-2">
+      <h1 className="font-serif italic text-2xl md:text-4xl font-medium mb-2">
         Registrar transferencia
       </h1>
       <p className="text-sm text-crave-brown/70 mb-7">

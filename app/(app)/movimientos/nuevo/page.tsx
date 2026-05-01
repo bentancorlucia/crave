@@ -13,7 +13,7 @@ export default async function NuevoMovimientoPage() {
       >
         <ChevronLeft size={16} /> Volver
       </Link>
-      <h1 className="font-serif italic text-3xl md:text-4xl font-medium mb-2">
+      <h1 className="font-serif italic text-2xl md:text-4xl font-medium mb-2">
         Registrar movimiento
       </h1>
       <p className="text-sm text-crave-brown/70 mb-7">

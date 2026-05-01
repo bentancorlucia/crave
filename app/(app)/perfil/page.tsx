@@ -27,7 +27,7 @@ export default async function PerfilPage() {
       >
         <ChevronLeft size={16} /> Volver
       </Link>
-      <h1 className="font-serif italic text-3xl md:text-4xl font-medium mb-2">
+      <h1 className="font-serif italic text-2xl md:text-4xl font-medium mb-2">
         Tu perfil
       </h1>
       <p className="text-sm text-crave-brown/70 mb-7">

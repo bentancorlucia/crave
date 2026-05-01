@@ -13,19 +13,25 @@ export default async function DeudasPage() {
 
   return (
     <main className="pb-12 space-y-8">
-      <div className="flex items-end justify-between gap-4 flex-wrap">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
         <div>
-          <h1 className="font-serif italic text-3xl md:text-4xl font-medium">Deudas</h1>
+          <h1 className="font-serif italic text-2xl md:text-4xl font-medium">Deudas</h1>
           <p className="text-sm text-crave-brown/70 mt-1">
             Gastos compartidos del grupo. Una socia pone la plata, se reparte entre varias y se
             saldan registrando reintegros.
           </p>
         </div>
-        <div className="flex gap-2 flex-wrap">
-          <Link href="/transferencias/nueva" className={buttonVariants({ variant: "secondary" })}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:flex gap-2 md:flex-wrap">
+          <Link
+            href="/transferencias/nueva"
+            className={buttonVariants({ variant: "secondary" }) + " w-full md:w-auto justify-center"}
+          >
             <Send size={15} /> Pagar a una socia
           </Link>
-          <Link href="/deudas/nuevo" className={buttonVariants()}>
+          <Link
+            href="/deudas/nuevo"
+            className={buttonVariants() + " w-full md:w-auto justify-center"}
+          >
             <Plus size={15} /> Nuevo gasto compartido
           </Link>
         </div>
