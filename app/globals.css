@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    background-color: #faf2bc;
+    color: #573219;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(#573219 0.75px, transparent 0.75px);
+    background-size: 24px 24px;
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Hide outer scrollbar for app feel */
+  html {
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Focus rings honor the brand */
+  :focus-visible {
+    outline: 2px solid #f1a4b6;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  .btn-press {
+    transition: transform 120ms ease;
+  }
+  .btn-press:active {
+    transform: scale(0.97);
+  }
+}

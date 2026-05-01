@@ -1,0 +1,18 @@
+.aidesigner/*
+!.aidesigner/.gitkeep
+
+# Next.js / Node
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+
+# Env
+.env
+.env.local
+.env*.local
+
+# TS
+*.tsbuildinfo
+next-env.d.ts.bak
