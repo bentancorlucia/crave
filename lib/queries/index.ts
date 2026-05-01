@@ -114,6 +114,110 @@ export async function listAllMovements(filter: { month?: string; type?: "ingreso
 }
 
 // =============================================================================
+// Evolución de la cuenta madre (saldo acumulado + flujo mensual)
+// =============================================================================
+
+export type DailyBalancePoint = { date: string; balance_cents: number; ingresos_cents: number; egresos_cents: number };
+export type MonthlyFlowPoint = { month: string; ingresos_cents: number; egresos_cents: number; neto_cents: number };
+export type EvolutionData = {
+  dailyBalance: DailyBalancePoint[];
+  monthlyFlow: MonthlyFlowPoint[];
+  stats: {
+    avgMonthlyIncome: number;
+    avgMonthlyExpense: number;
+    bestMonth: MonthlyFlowPoint | null;
+    worstMonth: MonthlyFlowPoint | null;
+    totalIngresos: number;
+    totalEgresos: number;
+    movementsCount: number;
+  };
+};
+
+export async function getMovementsEvolution(monthsBack = 12): Promise<EvolutionData> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("movements")
+    .select("type, amount_cents, occurred_on")
+    .order("occurred_on", { ascending: true });
+  if (error) throw error;
+  const movements = data ?? [];
+
+  // Saldo acumulado por día (sólo días con movimientos).
+  const byDay = new Map<string, { ingresos: number; egresos: number }>();
+  for (const m of movements) {
+    const day = m.occurred_on as string;
+    const cur = byDay.get(day) ?? { ingresos: 0, egresos: 0 };
+    if (m.type === "ingreso") cur.ingresos += Number(m.amount_cents);
+    else cur.egresos += Number(m.amount_cents);
+    byDay.set(day, cur);
+  }
+  const sortedDays = Array.from(byDay.keys()).sort();
+  let running = 0;
+  const dailyBalance: DailyBalancePoint[] = sortedDays.map((date) => {
+    const { ingresos, egresos } = byDay.get(date)!;
+    running += ingresos - egresos;
+    return { date, balance_cents: running, ingresos_cents: ingresos, egresos_cents: egresos };
+  });
+
+  // Flujo mensual — ventana fija de los últimos `monthsBack` meses (incluye actual).
+  const now = new Date();
+  const monthlyFlow: MonthlyFlowPoint[] = [];
+  for (let i = monthsBack - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    monthlyFlow.push({ month: key, ingresos_cents: 0, egresos_cents: 0, neto_cents: 0 });
+  }
+  const monthIdx = new Map(monthlyFlow.map((m, i) => [m.month, i]));
+  for (const m of movements) {
+    const key = (m.occurred_on as string).slice(0, 7);
+    const idx = monthIdx.get(key);
+    if (idx === undefined) continue;
+    if (m.type === "ingreso") monthlyFlow[idx].ingresos_cents += Number(m.amount_cents);
+    else monthlyFlow[idx].egresos_cents += Number(m.amount_cents);
+  }
+  monthlyFlow.forEach((m) => {
+    m.neto_cents = m.ingresos_cents - m.egresos_cents;
+  });
+
+  // Stats: promedios sobre meses con actividad para no diluir con meses vacíos.
+  const activeMonths = monthlyFlow.filter((m) => m.ingresos_cents + m.egresos_cents > 0);
+  const avgMonthlyIncome = activeMonths.length
+    ? Math.round(activeMonths.reduce((acc, m) => acc + m.ingresos_cents, 0) / activeMonths.length)
+    : 0;
+  const avgMonthlyExpense = activeMonths.length
+    ? Math.round(activeMonths.reduce((acc, m) => acc + m.egresos_cents, 0) / activeMonths.length)
+    : 0;
+  const bestMonth = activeMonths.length
+    ? activeMonths.reduce((best, m) => (m.neto_cents > best.neto_cents ? m : best))
+    : null;
+  const worstMonth = activeMonths.length
+    ? activeMonths.reduce((worst, m) => (m.neto_cents < worst.neto_cents ? m : worst))
+    : null;
+  const totalIngresos = movements.reduce(
+    (a, m) => a + (m.type === "ingreso" ? Number(m.amount_cents) : 0),
+    0,
+  );
+  const totalEgresos = movements.reduce(
+    (a, m) => a + (m.type === "egreso" ? Number(m.amount_cents) : 0),
+    0,
+  );
+
+  return {
+    dailyBalance,
+    monthlyFlow,
+    stats: {
+      avgMonthlyIncome,
+      avgMonthlyExpense,
+      bestMonth,
+      worstMonth,
+      totalIngresos,
+      totalEgresos,
+      movementsCount: movements.length,
+    },
+  };
+}
+
+// =============================================================================
 // Gastos compartidos (expense_groups + debts peer-to-peer)
 // =============================================================================
 
