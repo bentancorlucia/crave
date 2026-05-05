@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, Truck, ShoppingBag, Phone, Calendar } from "lucide-react";
+import { ChevronLeft, Truck, ShoppingBag, Phone, Calendar, Pencil } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { getOrderById } from "@/lib/queries";
 import { OrderStatusBadge } from "@/components/orders/OrderStatusBadge";
 import { LowStockWarning } from "@/components/orders/LowStockWarning";
@@ -47,8 +48,8 @@ export default async function PedidoPage({
       )}
 
       <header className="flex items-start justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-3 mb-1 flex-wrap">
             <h1 className="font-serif italic text-3xl md:text-4xl font-medium">
               {order.customer_name_snapshot}
             </h1>
@@ -72,6 +73,12 @@ export default async function PedidoPage({
             </span>
           </p>
         </div>
+        <Link
+          href={`/pedidos/${order.id}/editar`}
+          className={buttonVariants({ variant: "secondary", size: "sm" })}
+        >
+          <Pencil size={14} /> Editar
+        </Link>
       </header>
 
       {warnings.length > 0 && <LowStockWarning warnings={warnings} />}

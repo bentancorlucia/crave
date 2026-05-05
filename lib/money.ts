@@ -46,7 +46,15 @@ export function parseToCents(input: string): number | null {
 }
 
 export function formatRelativeDate(iso: string | Date): string {
-  const date = typeof iso === "string" ? new Date(iso) : iso;
+  let date: Date;
+  if (typeof iso === "string") {
+    const ymd = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    date = ymd
+      ? new Date(Number(ymd[1]), Number(ymd[2]) - 1, Number(ymd[3]))
+      : new Date(iso);
+  } else {
+    date = iso;
+  }
   const now = new Date();
   const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
   const diffDays = Math.round(
@@ -55,6 +63,8 @@ export function formatRelativeDate(iso: string | Date): string {
 
   if (diffDays === 0) return "hoy";
   if (diffDays === 1) return "ayer";
-  if (diffDays < 7) return `hace ${diffDays} días`;
+  if (diffDays === -1) return "mañana";
+  if (diffDays > 1 && diffDays < 7) return `hace ${diffDays} días`;
+  if (diffDays < -1 && diffDays > -7) return `en ${-diffDays} días`;
   return new Intl.DateTimeFormat("es-UY", { day: "numeric", month: "short" }).format(date);
 }
