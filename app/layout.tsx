@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Caveat, Fraunces, Outfit } from "next/font/google";
 import "./globals.css";
 
@@ -25,6 +25,19 @@ const caveat = Caveat({
 export const metadata: Metadata = {
   title: "crave. — hub interno",
   description: "Hub financiero de crave.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "crave.",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#faf2bc",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
