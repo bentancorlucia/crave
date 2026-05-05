@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ListChecks, Handshake, User } from "lucide-react";
+import { Home, ListChecks, Handshake, User, ClipboardList, ChefHat } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
   { href: "/dashboard",   label: "Inicio",      Icon: Home },
+  { href: "/pedidos",     label: "Pedidos",     Icon: ClipboardList },
+  { href: "/cocina",      label: "Cocina",      Icon: ChefHat },
   { href: "/movimientos", label: "Movimientos", Icon: ListChecks },
   { href: "/deudas",      label: "Deudas",      Icon: Handshake },
   { href: "/perfil",      label: "Perfil",      Icon: User },

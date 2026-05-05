@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ListChecks, Handshake, User } from "lucide-react";
+import { Home, ListChecks, Handshake, User, ClipboardList, ChefHat } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
-  { href: "/dashboard",   label: "Inicio",     Icon: Home },
-  { href: "/movimientos", label: "Movimientos", Icon: ListChecks },
-  { href: "/deudas",      label: "Deudas",     Icon: Handshake },
-  { href: "/perfil",      label: "Perfil",     Icon: User },
+  { href: "/dashboard",   label: "Inicio",      Icon: Home },
+  { href: "/pedidos",     label: "Pedidos",     Icon: ClipboardList },
+  { href: "/cocina",      label: "Cocina",      Icon: ChefHat },
+  { href: "/movimientos", label: "Movim.",      Icon: ListChecks },
+  { href: "/deudas",      label: "Deudas",      Icon: Handshake },
+  { href: "/perfil",      label: "Perfil",      Icon: User },
 ] as const;
 
 export function BottomNav() {
@@ -33,8 +35,8 @@ export function BottomNav() {
                 : "text-crave-brown/60 hover:text-crave-brown",
             )}
           >
-            <Icon size={22} strokeWidth={active ? 2.25 : 1.75} />
-            <span className={cn("text-[10px]", active ? "font-bold" : "font-medium")}>
+            <Icon size={20} strokeWidth={active ? 2.25 : 1.75} />
+            <span className={cn("text-[9px]", active ? "font-bold" : "font-medium")}>
               {label}
             </span>
           </Link>

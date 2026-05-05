@@ -1,5 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 
+export * from "./cocina";
+export * from "./pedidos";
+
 export async function listProfiles() {
   const supabase = await createClient();
   const { data, error } = await supabase

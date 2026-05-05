@@ -1,11 +1,15 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
-import { getMovementsEvolution, listAllMovements } from "@/lib/queries";
+import {
+  getMonthlyStats,
+  getMotherBalance,
+  getMovementsEvolution,
+  listAllMovements,
+} from "@/lib/queries";
+import { MotherAccountCard } from "@/components/finance/MotherAccountCard";
 import { RecentMovements } from "@/components/finance/RecentMovements";
 import { BalanceEvolutionChart } from "@/components/finance/BalanceEvolutionChart";
 import { MonthlyFlowChart } from "@/components/finance/MonthlyFlowChart";
 import { EvolutionStats } from "@/components/finance/EvolutionStats";
-import { buttonVariants } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 
@@ -21,24 +25,24 @@ export default async function MovimientosPage({
   const type =
     params.type === "ingreso" || params.type === "egreso" ? params.type : undefined;
 
+  const [balance, stats] = await Promise.all([getMotherBalance(), getMonthlyStats()]);
+
   return (
     <main className="pb-12 space-y-6">
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
-        <div>
-          <h1 className="font-serif italic text-2xl md:text-4xl font-medium">Movimientos</h1>
-          <p className="text-sm text-crave-brown/70">
-            {tab === "evolucion"
-              ? "Cómo evoluciona la cuenta madre con el tiempo."
-              : "Todo lo que entró y salió."}
-          </p>
-        </div>
-        <Link
-          href="/movimientos/nuevo"
-          className={buttonVariants() + " w-full md:w-auto justify-center"}
-        >
-          <Plus size={16} /> Registrar
-        </Link>
+      <div>
+        <h1 className="font-serif italic text-2xl md:text-4xl font-medium">Movimientos</h1>
+        <p className="text-sm text-crave-brown/70">
+          {tab === "evolucion"
+            ? "Cómo evoluciona la cuenta madre con el tiempo."
+            : "Todo lo que entró y salió."}
+        </p>
       </div>
+
+      <MotherAccountCard
+        balanceCents={balance}
+        monthlyIncome={stats.ingresosCents}
+        monthlyExpense={stats.egresosCents}
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 p-1 bg-crave-cream/60 border border-crave-brown/10 rounded-full w-fit">
