@@ -30,6 +30,9 @@ export function OrderRow({ order }: { order: OrderListItem }) {
             <span className="inline-flex items-center gap-1">
               {order.delivery_kind === "envio" ? <Truck size={12} /> : <ShoppingBag size={12} />}
               {order.delivery_kind === "envio" ? "Envío" : "Retira"}
+              {order.deliverers.length > 0 && (
+                <>: {order.deliverers.map((d) => d.display_name).join(", ")}</>
+              )}
             </span>
             {dueLabel && (
               <>
@@ -40,7 +43,7 @@ export function OrderRow({ order }: { order: OrderListItem }) {
             {order.cooks.length > 0 && (
               <>
                 <span>·</span>
-                <span>cocina: {order.cooks.map((c) => c.initial).join(", ")}</span>
+                <span>cocina: {order.cooks.map((c) => c.display_name).join(", ")}</span>
               </>
             )}
           </p>
