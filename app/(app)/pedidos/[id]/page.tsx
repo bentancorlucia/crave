@@ -8,7 +8,7 @@ import { LowStockWarning } from "@/components/orders/LowStockWarning";
 import { OrderCostSummary } from "@/components/orders/OrderCostSummary";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatUYU, formatRelativeDate } from "@/lib/money";
+import { formatUYU, formatRelativeDate, formatWeekdayShort } from "@/lib/money";
 import { StatusActions } from "./StatusActions";
 import { PaymentForm } from "./PaymentForm";
 import { DeleteOrderButton } from "./DeleteOrderButton";
@@ -68,7 +68,7 @@ export default async function PedidoPage({
             <span className="inline-flex items-center gap-1">
               <Calendar size={12} /> {formatRelativeDate(order.order_date)}
               {order.due_date && (
-                <> · entrega {formatRelativeDate(order.due_date)}</>
+                <> · entrega {formatRelativeDate(order.due_date)} ({formatWeekdayShort(order.due_date)})</>
               )}
             </span>
           </p>

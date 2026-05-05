@@ -45,16 +45,36 @@ export function parseToCents(input: string): number | null {
   return Math.round(value * 100);
 }
 
+function parseLocalDate(iso: string | Date): Date {
+  if (typeof iso !== "string") return iso;
+  const ymd = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return ymd
+    ? new Date(Number(ymd[1]), Number(ymd[2]) - 1, Number(ymd[3]))
+    : new Date(iso);
+}
+
+export function formatWeekdayShort(iso: string | Date): string {
+  const date = parseLocalDate(iso);
+  const weekday = new Intl.DateTimeFormat("es-UY", { weekday: "long" }).format(date);
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  return `${weekday} ${dd}/${mm}`;
+}
+
+export function formatUpcomingWeekday(iso: string | Date): string | null {
+  const date = parseLocalDate(iso);
+  const now = new Date();
+  const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = Math.round(
+    (startOfDay(date).getTime() - startOfDay(now).getTime()) / (1000 * 60 * 60 * 24),
+  );
+  if (diffDays < 2 || diffDays > 7) return null;
+  const weekday = new Intl.DateTimeFormat("es-UY", { weekday: "long" }).format(date);
+  return `este ${weekday}`;
+}
+
 export function formatRelativeDate(iso: string | Date): string {
-  let date: Date;
-  if (typeof iso === "string") {
-    const ymd = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    date = ymd
-      ? new Date(Number(ymd[1]), Number(ymd[2]) - 1, Number(ymd[3]))
-      : new Date(iso);
-  } else {
-    date = iso;
-  }
+  const date = parseLocalDate(iso);
   const now = new Date();
   const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
   const diffDays = Math.round(

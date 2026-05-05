@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { Truck, ShoppingBag, ChevronRight } from "lucide-react";
-import { formatUYU, formatRelativeDate } from "@/lib/money";
+import { formatUYU, formatRelativeDate, formatUpcomingWeekday } from "@/lib/money";
 import { OrderStatusBadge } from "./OrderStatusBadge";
 import type { OrderListItem } from "@/lib/queries/pedidos";
 
 export function OrderRow({ order }: { order: OrderListItem }) {
   const remaining = Math.max(0, order.total_cents - order.paid_cents);
   const fullyPaid = order.paid_cents >= order.total_cents && order.total_cents > 0;
-  const dueLabel = order.due_date
-    ? formatRelativeDate(order.due_date)
-    : null;
+  const dueLabel = order.due_date ? formatRelativeDate(order.due_date) : null;
+  const dueWeekday = order.due_date ? formatUpcomingWeekday(order.due_date) : null;
 
   return (
     <Link
@@ -35,7 +34,7 @@ export function OrderRow({ order }: { order: OrderListItem }) {
             {dueLabel && (
               <>
                 <span>·</span>
-                <span>entrega {dueLabel}</span>
+                <span>entrega {dueLabel}{dueWeekday ? ` (${dueWeekday})` : ""}</span>
               </>
             )}
             {order.cooks.length > 0 && (
